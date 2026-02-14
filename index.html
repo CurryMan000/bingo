@@ -242,8 +242,6 @@
       <div class="controls">
         <button id="drawBtn" class="draw">回す</button>
       </div>
-
-      <div class="info">残 <span id="remaining">72</span> 個</div>
     </div>
   </div>
 
@@ -261,13 +259,11 @@
       const bigEl = document.getElementById('big')
       const drawBtn = document.getElementById('drawBtn')
       const resetBtn = document.getElementById('resetBtn')
-      const remainingEl = document.getElementById('remaining')
       const historyWrap = document.getElementById('history')
 
       // UI 更新
       function updateUI(latest){
         bigEl.textContent = latest == null ? '—' : String(latest)
-        remainingEl.textContent = pool.length
 
         // 履歴表示（過去5つ）
         historyWrap.innerHTML = ''
