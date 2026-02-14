@@ -22,6 +22,33 @@
     justify-content:center;
     overflow:hidden;
   }
+  .app-title{
+    margin:0 0 20px;
+    font-size:32px;
+    font-weight:900;
+    letter-spacing:3px;
+
+    background: linear-gradient(
+      90deg,
+      #ff0080,
+      #ff8c00,
+      #ffd700,
+      #00f0ff,
+      #7b00ff,
+      #ff0080
+    );
+    background-size:300% 100%;
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    animation:partyGlow 6s linear infinite;
+  }
+
+  @keyframes partyGlow{
+    0%{ background-position:0% 50%; }
+    100%{ background-position:100% 50%; }
+  }
   .wrapper{width:100%;max-width:720px;padding:28px;box-sizing:border-box;text-align:center}
   .card{
     background:rgba(15,19,36,0.8);
@@ -333,4 +360,3 @@
   </script>
 </body>
 </html>
-
