@@ -173,13 +173,23 @@
       padding:16px;
     }
 
-    .card{
+     .card{
       display:flex;
       flex-direction:row;
       align-items:center;
-      justify-content:center;
-      gap:40px;
-      padding:20px;
+      justify-content:space-between;
+      gap:30px;
+    }
+
+    /* 左側を広げる */
+    .card > :first-child{
+      flex:2;          /* ← 左を広く */
+    }
+
+    /* 履歴を少し狭く */
+    .history{
+      flex:1;          /* ← 右を狭める */
+      margin-left:20px;
     }
 
     /* ===== 真円を維持する方法 ===== */
