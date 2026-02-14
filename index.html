@@ -187,16 +187,20 @@
       gap:8px;
     }
 
-    /* ↓ サイズダウン */
+    /* ===== 履歴 真円固定 ===== */
     .hist-item{
+      aspect-ratio:1 / 1;   /* ← これが最重要 */
       width:60px;
-      height:60px;
+      height:auto;          /* 高さは自動 */
+      min-width:60px;       /* flex縮小防止 */
+      flex-shrink:0;        /* 横圧縮防止 */
       font-size:22px;
     }
 
     .hist-item.small{
       width:48px;
-      height:48px;
+      min-width:48px;
+      height:auto;
       font-size:18px;
     }
   }
