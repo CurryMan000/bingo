@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ビンゴ</title>
+<style>
+  :root{
+    --bg:#070a14;
+    --card:#0f1324;
+    --accent:#00f0ff;
+    --accent2:#ff33c7;
+    --muted:#8fa3c4;
+    --white:#ffffff;
+  }
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Hiragino Kaku Gothic ProN',Meiryo,Arial;}
+  body{
+    background:radial-gradient(circle at 25% 25%, #0c0f1d 0%, #070a14 80%);
+    color:var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .wrapper{width:100%;max-width:720px;padding:28px;box-sizing:border-box;text-align:center}
+  .card{
+    background:rgba(15,19,36,0.8);
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(0,240,255,0.3), 0 0 60px rgba(255,51,199,0.2);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.05);
+  }
+  h1{
+    margin:0 0 12px;
+    font-size:26px;
+    font-weight:700;
+    color:var(--accent);
+    text-shadow:0 2px 4px rgba(255,51,199,0.6),0 0 10px rgba(0,240,255,0.5);
+  }
+  .big-number{
+    width:500px;
+    height:500px;
+    margin:18px auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:380px;
+    font-weight:900;
+    color:var(--accent2);
+    background:radial-gradient(circle,#0f1324 0%,#1a1f3a 70%,#0f1324 100%);
+    border:10px solid var(--accent);
+    box-shadow:0 0 30px rgba(0,240,255,0.6),0 0 50px rgba(255,51,199,0.5);
+    transition:transform .25s ease,opacity .25s ease;
+  }
+  .big-number.shrink{transform:scale(.85);opacity:.6}
+  .big-number.spin{animation:spinAnim 0.9s linear infinite}
+  @keyframes spinAnim{
+    0%{transform:rotate(0deg) scale(0.95)}
+    50%{transform:rotate(180deg) scale(1.05)}
+    100%{transform:rotate(360deg) scale(0.95)}
+  }
+  .controls{display:flex;gap:12px;justify-content:center;margin-top:16px}
+  button{
+    padding:14px 22px;
+    border-radius:12px;
+    border:0;
+    font-weight:700;
+    cursor:pointer;
+    font-size:18px;
+    text-shadow:0 0 5px rgba(0,0,0,0.3);
+  }
+  .draw{
+    background:linear-gradient(90deg,var(--accent),#33f9ff);
+    color:#111;
+    box-shadow:0 0 20px rgba(0,240,255,0.5);
+  }
+  .reset{
+    background:linear-gradient(90deg,var(--accent2),#ff80e1);
+    color:#111;
+    box-shadow:0 0 20px rgba(255,51,199,0.5);
+  }
+  .info{text-align:center;margin-top:12px;color:var(--muted);font-size:16px;font-weight:600}
+  .history{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:12px;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    pointer-events:none;
+  }
+  .history-list{
+    background:rgba(15,19,36,0.85);
+    padding:12px 18px;
+    border-radius:999px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    box-shadow:0 0 25px rgba(0,240,255,0.3),0 0 40px rgba(255,51,199,0.2);
+    pointer-events:auto;
+  }
+  .hist-item{
+    min-width:80px;
+    height:80px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:radial-gradient(circle,#101522 0%,#1f2540 80%);
+    color:var(--accent2);
+    font-weight:800;
+    font-size:34px;
+    border:4px solid var(--accent);
+    box-shadow:0 0 15px rgba(0,240,255,0.4),0 0 25px rgba(255,51,199,0.3);
+    pointer-events:auto;
+  }
+  .hist-item.small{
+    min-width:64px;
+    height:64px;
+    font-size:26px;
+  }
+  .remaining{
+    text-align:center;
+    font-size:14px;color:var(--muted);margin-left:0;
+    display:block;margin-top:6px
+  }
+  @media(max-width:520px){
+    .big-number{width:240px;height:240px;font-size:90px}
+    .hist-item{min-width:52px;height:52px;font-size:20px}
+    .hist-item.small{min-width:42px;height:42px;font-size:16px}}
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div id="big" class="big-number">—</div>
+
+      <div class="controls">
+        <button id="drawBtn" class="draw">ビンゴを引く</button>
+      </div>
+
+      <div class="info">残り: <span id="remaining">72</span> 個</div>
+    </div>
+  </div>
+
+  <div class="history">
+    <div class="history-list" id="history"></div>
+  </div>
+
+  <script>
+    (function(){
+      // プール生成
+      const initPool = () => Array.from({length:72}, (_,i)=>i+1)
+      let pool = initPool()
+      let history = []
+
+      const bigEl = document.getElementById('big')
+      const drawBtn = document.getElementById('drawBtn')
+      const resetBtn = document.getElementById('resetBtn')
+      const remainingEl = document.getElementById('remaining')
+      const historyWrap = document.getElementById('history')
+
+      // UI 更新
+      function updateUI(latest){
+        bigEl.textContent = latest == null ? '—' : String(latest)
+        remainingEl.textContent = pool.length
+
+        // 履歴表示（過去5つ）
+        historyWrap.innerHTML = ''
+        const lastFive = history.slice(0,5)
+        if(lastFive.length===0){
+          const placeholder = document.createElement('div')
+          placeholder.className='hist-item small'
+          placeholder.textContent='—'
+          historyWrap.appendChild(placeholder)
+        } else {
+          lastFive.forEach((num, idx)=>{
+            const d = document.createElement('div')
+            d.className = 'hist-item' + (idx>0? ' small':'')
+            d.textContent = num
+            historyWrap.appendChild(d)
+          })
+        }
+      }
+
+      // 抽選ロジック（ぐるぐる + ローリング表示）
+      let rollingInterval = null
+      function drawNumber(){
+        if(pool.length===0){
+          alert('もう引ける番号がありません。リセットしてください。')
+          return
+        }
+
+        // ボタン無効化（連打防止）
+        drawBtn.disabled = true
+        drawBtn.style.opacity = '0.8'
+
+        const spinDuration = 3000 // ミリ秒
+        const rollInterval = 60 // ミリ秒ごとに表示を変える
+
+        // スピンスタイル
+        bigEl.classList.add('spin')
+
+        // ローリングで数字を素早く切り替える
+        rollingInterval = setInterval(()=>{
+          const r = Math.floor(Math.random()*72)+1
+          bigEl.textContent = r
+        }, rollInterval)
+
+        // 最終決定まで待つ
+        setTimeout(()=>{
+          clearInterval(rollingInterval)
+          rollingInterval = null
+          bigEl.classList.remove('spin')
+
+          // 決定番号を抜く
+          const i = Math.floor(Math.random()*pool.length)
+          const num = pool.splice(i,1)[0]
+          history.unshift(num)
+
+          // 小さな演出（縮小→戻る）
+          bigEl.classList.add('shrink')
+          setTimeout(()=>{
+            bigEl.classList.remove('shrink')
+            updateUI(num)
+            // 再度ボタン有効化
+            drawBtn.disabled = false
+            drawBtn.style.opacity = ''
+            drawBtn.blur()
+          }, 220)
+        }, spinDuration)
+      }
+
+      function resetAll(){
+        if(!confirm('本当にリセットしますか？引いた履歴は消えます。')) return
+        pool = initPool()
+        history = []
+        updateUI(null)
+      }
+
+      // 初期表示
+      updateUI(null)
+
+      drawBtn.addEventListener('click', drawNumber)
+      resetBtn.addEventListener('click', resetAll)
+
+      // スペースキーでも引ける
+      window.addEventListener('keydown', (e)=>{
+        if(e.code==='Space'){
+          e.preventDefault()
+          drawNumber()
+        }
+      })
+
+    })()
+  </script>
+</body>
+</html>
