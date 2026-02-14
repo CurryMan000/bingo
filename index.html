@@ -132,7 +132,7 @@
     .hist-item{min-width:52px;height:52px;font-size:20px}
     .hist-item.small{min-width:42px;height:42px;font-size:16px}}
   /* ===============================
-   横画面対応（履歴右側表示）
+    横画面対応 修正版
   ================================ */
   @media screen and (orientation: landscape) {
 
@@ -143,7 +143,7 @@
 
     .wrapper{
       max-width:100%;
-      padding:20px;
+      padding:16px;
     }
 
     .card{
@@ -151,15 +151,16 @@
       flex-direction:row;
       align-items:center;
       justify-content:center;
-      gap:60px;
-      padding:20px 30px;
+      gap:40px;
+      padding:20px;
     }
 
-    /* 左側（数字＋操作） */
+    /* ===== 真円を維持する方法 ===== */
     .big-number{
-      width:35vh;
-      height:35vh;
-      font-size:24vh;
+      aspect-ratio:1 / 1;   /* ← これが重要 */
+      height:60vh;          /* 高さ基準 */
+      width:auto;           /* 幅は自動 */
+      font-size:32vh;
       margin:0;
     }
 
@@ -169,35 +170,34 @@
     }
 
     .info{
-      margin-top:16px;
+      margin-top:12px;
     }
 
-    /* ====================
-      履歴を右側に移動
-    ==================== */
-
+    /* ===== 履歴を右側縦並び ===== */
     .history{
       position:static;
       transform:none;
-      margin-left:40px;
+      margin-left:20px;
     }
 
     .history-list{
       flex-direction:column;
-      padding:16px;
-      border-radius:20px;
+      padding:12px;
+      border-radius:16px;
+      gap:8px;
     }
 
+    /* ↓ サイズダウン */
     .hist-item{
-      width:90px;
-      height:90px;
-      font-size:36px;
+      width:60px;
+      height:60px;
+      font-size:22px;
     }
 
     .hist-item.small{
-      width:70px;
-      height:70px;
-      font-size:26px;
+      width:48px;
+      height:48px;
+      font-size:18px;
     }
   }
 </style>
@@ -208,10 +208,10 @@
       <div id="big" class="big-number">—</div>
 
       <div class="controls">
-        <button id="drawBtn" class="draw">ビンゴを引く</button>
+        <button id="drawBtn" class="draw">回す</button>
       </div>
 
-      <div class="info">残り: <span id="remaining">72</span> 個</div>
+      <div class="info">残 <span id="remaining">72</span> 個</div>
     </div>
   </div>
 
