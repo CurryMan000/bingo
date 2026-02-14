@@ -159,7 +159,7 @@
     .hist-item{min-width:52px;height:52px;font-size:20px}
     .hist-item.small{min-width:42px;height:42px;font-size:16px}}
   /* ===============================
-    横画面対応 修正版
+    横画面対応
   ================================ */
   @media screen and (orientation: landscape) {
 
@@ -180,25 +180,20 @@
       justify-content:space-between;
       gap:30px;
     }
-
-    /* 左側を広げる */
     .card > :first-child{
-      flex:2;          /* ← 左を広く */
+      flex:2;
     }
-
-    /* 履歴を少し狭く */
     .history{
-      flex:1;          /* ← 右を狭める */
+      flex:1;
       margin-left:20px;
     }
-
-    /* ===== 真円を維持する方法 ===== */
     .big-number{
-      aspect-ratio:1 / 1;   /* ← これが重要 */
-      height:60vh;          /* 高さ基準 */
-      width:auto;           /* 幅は自動 */
-      font-size:32vh;
-      margin:0;
+      aspect-ratio:1 / 1;
+      height:60vh;
+      width:auto;
+      max-width: 60vh;
+      font-size:36vh;
+      margin:0 auto;
     }
 
     .controls{
@@ -226,11 +221,11 @@
 
     /* ===== 履歴 真円固定 ===== */
     .hist-item{
-      aspect-ratio:1 / 1;   /* ← これが最重要 */
+      aspect-ratio:1 / 1;
       width:60px;
-      height:auto;          /* 高さは自動 */
-      min-width:60px;       /* flex縮小防止 */
-      flex-shrink:0;        /* 横圧縮防止 */
+      height:auto;
+      min-width:60px;
+      flex-shrink:0;
       font-size:22px;
     }
 
