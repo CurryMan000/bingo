@@ -88,6 +88,59 @@
     50%{transform:rotate(180deg) scale(1.05)}
     100%{transform:rotate(360deg) scale(0.95)}
   }
+  .big-number.gold {
+    color: gold;
+    border: 10px solid #ffd700 !important;
+    box-shadow:
+      0 0 30px #ffd700,
+      0 0 60px #ffcc00,
+      0 0 100px #ffaa00;
+    text-shadow:
+      0 0 10px #ffd700,
+      0 0 20px #ffcc00,
+      0 0 40px #fff200,
+      0 0 60px #ffaa00;
+  }
+
+  @keyframes goldGlow {
+    0% {
+      text-shadow:
+        0 0 5px #ffd700,
+        0 0 15px #ffcc00,
+        0 0 25px #ffaa00;
+    }
+    100% {
+      text-shadow:
+        0 0 20px #fff200,
+        0 0 40px #ffd700,
+        0 0 60px #ffcc00;
+    }
+  }
+  .big-number.silver {
+    color: #cfd8dc;
+    border: 10px solid #cfd8dc !important;
+    box-shadow:
+      0 0 30px #ffffff,
+      0 0 60px #d0e0ff,
+      0 0 100px #b0c4de;
+    text-shadow:
+      0 0 10px #ffffff,
+      0 0 20px #d0e0ff,
+      0 0 40px #b0c4de,
+      0 0 60px #e0e0e0;
+  }
+  @keyframes silverGlow {
+    0% {
+      text-shadow:
+        0 0 5px #ffffff,
+        0 0 15px #d0e0ff;
+    }
+    100% {
+      text-shadow:
+        0 0 25px #ffffff,
+        0 0 45px #b0c4de;
+    }
+  }
   .controls{display:flex;gap:12px;justify-content:center;margin-top:16px}
   button{
     padding:14px 22px;
@@ -148,6 +201,49 @@
     min-width:64px;
     height:64px;
     font-size:26px;
+  }
+  .hist-item.gold {
+    color: gold;
+    border-color: #ffd700;
+    box-shadow:
+      0 0 10px #ffd700,
+      0 0 20px #ffcc00,
+      0 0 30px #ffaa00;
+    animation: goldGlowSmall 1.2s ease-in-out infinite alternate;
+  }
+
+  @keyframes goldGlowSmall {
+    0% {
+      box-shadow:
+        0 0 5px #ffd700,
+        0 0 10px #ffcc00;
+    }
+    100% {
+      box-shadow:
+        0 0 20px #fff200,
+        0 0 30px #ffd700;
+    }
+  }
+  .hist-item.silver {
+    color: #e0e0e0;
+    border-color: #cfd8dc;
+    box-shadow:
+      0 0 10px #ffffff,
+      0 0 20px #d0e0ff,
+      0 0 30px #b0c4de;
+    animation: silverGlowSmall 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes silverGlowSmall {
+    0% {
+      box-shadow:
+        0 0 5px #ffffff,
+        0 0 10px #d0e0ff;
+    }
+    100% {
+      box-shadow:
+        0 0 20px #ffffff,
+        0 0 30px #b0c4de;
+    }
   }
   .remaining{
     text-align:center;
@@ -277,6 +373,19 @@
       function updateUI(latest){
         bigEl.textContent = latest == null ? '—' : String(latest)
 
+        bigEl.classList.remove('gold')
+        bigEl.classList.remove('silver')
+
+        const silverNumbers = [2, 7, 22, 39, 55]
+
+        bigEl.classList.remove('gold')
+        if(latest === 27){
+          bigEl.classList.add('gold')
+        }
+        else if(silverNumbers.includes(latest)){
+          bigEl.classList.add('silver')
+        }
+
         // 履歴表示（過去5つ）
         historyWrap.innerHTML = ''
         const lastFive = history.slice(0,5)
@@ -290,6 +399,13 @@
             const d = document.createElement('div')
             d.className = 'hist-item' + (idx>0? ' small':'')
             d.textContent = num
+            const silverNumbers = [2, 7, 22, 39, 55]
+            if(num === 27){
+              d.classList.add('gold')
+            }
+            else if(silverNumbers.includes(num)){
+              d.classList.add('silver')
+            }
             historyWrap.appendChild(d)
           })
         }
